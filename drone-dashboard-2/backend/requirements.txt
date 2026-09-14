@@ -1,0 +1,16 @@
+fastapi==0.115.0
+uvicorn[standard]==0.30.6
+websockets==13.1
+opencv-python==4.10.0.84
+numpy==1.26.4
+Pillow==10.4.0   # used by mock_server.py only
+python-multipart>=0.0.9
+pymavlink==2.4.41
+pyserial==3.5
+
+# ROS2 dependencies (rclpy, mavros_msgs, sensor_msgs, cv_bridge) are NOT
+# pip-installable. They must come from your ROS2 distro (Humble/Iron) on the
+# Jetson, e.g.:
+#   sudo apt install ros-humble-mavros ros-humble-mavros-msgs \
+#       ros-humble-cv-bridge ros-humble-sensor-msgs
+# Source your ROS2 workspace before running telemetry_server.py.
