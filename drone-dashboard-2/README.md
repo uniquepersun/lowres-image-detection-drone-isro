@@ -8,6 +8,39 @@ backend/    FastAPI + ROS2 telemetry/video server (runs on the Jetson)
 frontend/   React + TypeScript + Tailwind dashboard (runs on the Mac)
 ```
 
+## Quick run on real hardware (no mock data)
+
+**On the Jetson** (`hostname -I` gives its IP):
+
+```bash
+git clone https://github.com/uniquepersun/lowres-image-detection-drone-isro.git
+cd lowres-image-detection-drone-isro/drone-dashboard-2/backend
+
+export FCU_URL="udp:127.0.0.1:14550"   # MAVLink source (UDP forward or serial, see app.py)
+./start_jetson_all.sh                  # venv + deps + uvicorn on :8000
+```
+
+Plug the camera in before starting.
+
+**On the Mac:**
+
+```bash
+git clone https://github.com/uniquepersun/lowres-image-detection-drone-isro.git
+cd lowres-image-detection-drone-isro/drone-dashboard-2/frontend
+npm install && npm run dev             # http://localhost:5173
+```
+
+Then in the browser console, point the dashboard at the Jetson
+(the default host `car@car.local` is not a valid hostname):
+
+```js
+localStorage.setItem("JETSON_HOST", "<JETSON_IP>"); localStorage.setItem("JETSON_PORT", "8000"); location.reload()
+```
+
+Check: `curl http://<JETSON_IP>:8000/video -m 3 | head -c 200` should return
+MJPEG bytes. If the dashboard shows no telemetry, nothing is reaching
+`FCU_URL` — check the serial port (`ls /dev/tty*`) or your MAVLink forwarder.
+
 ## Quick start (no hardware, frontend dev only)
 
 Use the mock backend to build/test the UI without the Jetson or drone:
